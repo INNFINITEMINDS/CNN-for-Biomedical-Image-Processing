@@ -1,4 +1,4 @@
-# CNN-for-Radon-Transformation
+# CNN-for-Biomedical-Image-Process
 Improving the quality of reconstruction image by radon transformation by CNN. The convolution neural network is coded by tensorflow. This project is a reproduction of the Deep Convolutional Neural Network for Inverse Problems in Imaging[1].
 
  
