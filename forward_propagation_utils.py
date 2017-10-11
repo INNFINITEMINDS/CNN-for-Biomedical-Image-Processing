@@ -61,19 +61,18 @@ def deconv2d(layer_name, in_tensor, out_channels, upsample_factor, is_training =
         
         out_h = in_tensor.shape[1] * upsample_factor
         out_w = in_tensor.shape[2] * upsample_factor
-
         out_shape = tf.stack([in_tensor.shape[0], out_h, out_w, out_channels])
         
         filter_shape = [kernel_size, kernel_size, out_channels, in_tensor.shape[-1]]
         w = bilinear_filter(filter_shape, upsample_factor) #initialize w with bilinear interpolation filter
-        deconv_tensor = tf.nn.conv2d_transpose(in_tensor, w, out_shape, strides = strides, padding = 'SAME')
         
+        deconv_tensor = tf.nn.conv2d_transpose(in_tensor, w, out_shape, strides = strides, padding = 'SAME')
         norm_deconv = tf.layers.batch_normalization(inputs = deconv_tensor, axis = -1, training = is_training)
         out_tensor = tf.nn.relu(norm_deconv, name = 'relu_act')
         
         return out_tensor
 
-def skip_connection(tensor1, tensor2):
+def concat_connection(tensor1, tensor2):
     return tf.concat([tensor1, tensor2], axis = -1, name = 'concat')
   
 #the test code
