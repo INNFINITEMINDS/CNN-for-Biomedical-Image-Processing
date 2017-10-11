@@ -76,6 +76,7 @@ def deconv2d(layer_name, in_tensor, out_channels, upsample_factor, is_training =
 def skip_connection(tensor1, tensor2):
     return tf.concat([tensor1, tensor2], axis = -1, name = 'concat')
   
+#the test code
 if __name__ == '__main__':
     m = deconv2d('conv_layer', tf.ones((2,4,4,8)), 4, 2)
     sess = tf.Session()
