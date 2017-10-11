@@ -3,7 +3,7 @@ Improving the quality of reconstruction image by radon transformation by CNN. Th
 
  
 
-The architecture of the CNN is adapted from the U-net by remove the skip connection of the residual learning.
+The architecture of the CNN is adapted from the U-net by remove the skip connection of the residual learning, and all the convolution layers are padded to retain the same size as the input tensor. Besides, the final output image is one channel, which is different from the original U-net since U-net needs to get the background and foreground.
 
 ![alt text](https://github.com/shawnye1994/CNN-for-Radon-Transformation/blob/master/CNN%20architecture.jpg)
 
