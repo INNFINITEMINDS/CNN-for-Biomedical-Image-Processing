@@ -14,10 +14,10 @@ def conv2d(layer_name, in_tensor, out_channels, kernel_size = 3, stride = 1,
     with tf.variable_scope(layer_name):
         in_channels = in_tensor.shape[-1]
         w_shape = [kernel_size, kernel_size, in_channels, out_channels]
-        kernel = tf.get_variable('f', w_shape, tf.float32, initializer = tf.truncated_normal(
+        w = tf.get_variable('f', w_shape, tf.float32, initializer = tf.truncated_normal(
                 w_shape, stddev = 0.1))
         
-        h = tf.nn.conv2d(in_tensor, kernel, strides = [1, stride, stride, 1],
+        h = tf.nn.conv2d(in_tensor, w, strides = [1, stride, stride, 1],
                                   padding = 'SAME')
         ##remember add the update_ops as a dependency to train_op during training
         h_norm = tf.layers.batch_normalization(inputs = h, axis = -1, training = is_training)
