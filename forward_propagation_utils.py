@@ -12,10 +12,10 @@ def conv2d(layer_name, in_tensor, out_channels, kernel_size = 3, stride = 1,
                  is_training = True):
 
     with tf.variable_scope(layer_name):
-        in_channels = in_tensor.shape[-1]
+        in_channels = in_tensor.get_shape().as_list()[-1]
         w_shape = [kernel_size, kernel_size, in_channels, out_channels]
-        w = tf.get_variable('f', w_shape, tf.float32, initializer = tf.truncated_normal(
-                w_shape, stddev = 0.1))
+        w = tf.get_variable('f', dtype = tf.float32, initializer = tf.truncated_normal(
+                shape = w_shape, stddev = 0.1))
         
         h = tf.nn.conv2d(in_tensor, w, strides = [1, stride, stride, 1],
                                   padding = 'SAME')
@@ -29,7 +29,7 @@ def max_pool(input_tensor, kernel_size = 2, stride = 2):
     return tf.nn.max_pool(input_tensor, ksize = [1,kernel_size, kernel_size, 1],
                           strides = [1,stride,stride,1], padding = 'SAME')
 
-def deconv2d(layer_name, in_tensor, out_channels, upsample_factor, is_training = True):
+def deconv2d(layer_name, in_tensor, out_channels, upsample_factor = 2, is_training = True):
     """
     the filter of the deconvoluation layers initialized with a bilinear interpolation
     filter
@@ -59,11 +59,11 @@ def deconv2d(layer_name, in_tensor, out_channels, upsample_factor, is_training =
         stride = upsample_factor #the stride of deconv equals to the upsample_factor
         strides = [1, stride, stride, 1]
         
-        out_h = in_tensor.shape[1] * upsample_factor
-        out_w = in_tensor.shape[2] * upsample_factor
-        out_shape = tf.stack([in_tensor.shape[0], out_h, out_w, out_channels])
+        out_h = in_tensor.get_shape().as_list()[1] * upsample_factor
+        out_w = in_tensor.get_shape().as_list()[2] * upsample_factor
+        out_shape = [in_tensor.get_shape().as_list()[0], out_h, out_w, out_channels]
         
-        filter_shape = [kernel_size, kernel_size, out_channels, in_tensor.shape[-1]]
+        filter_shape = [kernel_size, kernel_size, out_channels, in_tensor.get_shape().as_list()[-1]]
         w = bilinear_filter(filter_shape, upsample_factor) #initialize w with bilinear interpolation filter
         
         deconv_tensor = tf.nn.conv2d_transpose(in_tensor, w, out_shape, strides = strides, padding = 'SAME')
@@ -77,10 +77,13 @@ def concat_connection(tensor1, tensor2):
   
 #the test code
 if __name__ == '__main__':
-    m = deconv2d('conv_layer', tf.ones((2,4,4,8)), 4, 2)
+    m = deconv2d('deconv_layer', tf.ones((2,4,4,8)), 4, 2)
+    n = conv2d('conv_layer', tf.ones((1,32,32,8)), 4)
+    n_max_pool = max_pool(n)
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
     
+    print(sess.run(n_max_pool))
     print(sess.run(m))
-        
+    print(sess.run(n))
     
