@@ -56,12 +56,12 @@ def forward_propagation(X, is_training):
     return out_put
 
 if __name__ == '__main__':
-    #X = tf.ones((1,512,512,1), name = 'test_input')
+
     X = tf.placeholder(dtype = tf.float32, shape = [1,512,512,1])
+    test_output = forward_propagation(X, True)
+    
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
-    
-    test_output = forward_propagation(X, True)
     sess.run(test_output, feed_dict = {X:np.ones((1,512,512,1))})
     print(test_output)
     
