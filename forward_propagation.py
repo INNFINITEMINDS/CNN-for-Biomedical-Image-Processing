@@ -5,13 +5,13 @@ Created on Thu Oct 12 20:25:35 2017
 @author: Shawn
 """
 
-from forward_propagation_utils import conv2d, max_pool, deconv2d, concat_connection
+from net_layers import conv2d, max_pool, deconv2d, concat_connection
 import tensorflow as tf
 import numpy as np
 
 def forward_propagation(X, is_training):
     ###downsample process
-    d_1_1 = conv2d('down1_layer1', X, 64, is_training = is_training)
+    d_1_1 = conv2d('down1_layer1', X, 64, last_layer_ksize = 1, is_training = is_training)
     d_1_2 = conv2d('down1_layer2', d_1_1, 64, is_training = is_training)
     d_1_3 = conv2d('down1_layer3', d_1_2, 64, is_training = is_training)
     
@@ -34,19 +34,19 @@ def forward_propagation(X, is_training):
     
     ####upsample process
     u_4_1 = concat_connection(d_4_3, deconv2d('up4_layer1', b_3, 512, is_training = is_training))
-    u_4_2 = conv2d('up4_layer2', u_4_1, 512, is_training = is_training)
+    u_4_2 = conv2d('up4_layer2', u_4_1, 512, last_layer_ksize = 4, is_training = is_training)
     u_4_3 = conv2d('up4_layer3', u_4_2, 512, is_training = is_training)
     
     u_3_1 = concat_connection(d_3_3, deconv2d('up3_layer1', u_4_3, 256, is_training = is_training))
-    u_3_2 = conv2d('up3_layer2', u_3_1, 256, is_training = is_training)
+    u_3_2 = conv2d('up3_layer2', u_3_1, 256, last_layer_ksize = 4, is_training = is_training)
     u_3_3 = conv2d('up3_layer3', u_3_2, 256, is_training = is_training)
     
     u_2_1 = concat_connection(d_2_3, deconv2d('up2_layer1', u_3_3, 128, is_training = is_training))
-    u_2_2 = conv2d('up2_layer2', u_2_1, 128, is_training = is_training)
+    u_2_2 = conv2d('up2_layer2', u_2_1, 128, last_layer_ksize = 4, is_training = is_training)
     u_2_3 = conv2d('up2_layer3', u_2_2, 128, is_training = is_training)
     
     u_1_1 = concat_connection(d_1_3, deconv2d('up1_layer1', u_2_3, 64, is_training = is_training))
-    u_1_2 = conv2d('up1_layer2', u_1_1, 64, is_training = is_training)
+    u_1_2 = conv2d('up1_layer2', u_1_1, 64, last_layer_ksize = 4, is_training = is_training)
     u_1_3 = conv2d('up1_layer3', u_1_2, 64, is_training = is_training)
     
     ###the output layer
