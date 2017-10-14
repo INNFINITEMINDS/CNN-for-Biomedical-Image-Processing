@@ -13,7 +13,7 @@ The architecture of the CNN is adapted from the U-net by remove the skip connect
 >The test dataset is a real CT dataset that comprises 377 sinograms collected from an experiment at the TOMCAT beam line of the Swiss >Light Source at the Paul Scherrer Institute in Villigen, Switzerland.
 >Each sinogram is 1493 pixels by 721 views and comes from one z-slice of a single rat brain.
 
-I haven't figure out the loss function of this CNN yet.
+I haven't figured out the loss function of this CNN yet.
 ## Reference
 
 **[1] Jin, Kyong Hwan, et al. "Deep convolutional neural network for inverse problems in imaging." IEEE Transactions on Image Processing 26.9 (2017): 4509-4522.**
