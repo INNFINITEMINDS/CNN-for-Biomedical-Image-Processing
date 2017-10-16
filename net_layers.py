@@ -76,7 +76,7 @@ def deconv2d(layer_name, in_tensor, out_channels, upsample_factor = 2, is_traini
 def concat_connection(tensor1, tensor2):
     return tf.concat([tensor1, tensor2], axis = -1, name = 'concat')
 
-
+"""
 def soft_max(in_tensor):
     exp_tensor = tf.exp(in_tensor)
     sum_exp = tf.reduce_sum(exp_tensor, axis = 3, keep_dims = True)
@@ -98,6 +98,33 @@ def pixel_softmax_cost_func(in_tensor, label_tensor):
                                                                   logits = flatten_in_tensor))
     
     return cost
+"""
+def pixel_L1_cost(in_tensor, label_tensor):
+    H = in_tensor.get_shape().as_list()[1]
+    W = in_tensor.get_shape().as_list()[2]
+    assert H == label_tensor.get_shape().as_list()[1] & W == label_tensor.get_shape().as_list()[2]
+    
+    batch_size = in_tensor.get_shape().as_list()[0]
+    flatten_in_tensor = tf.reshape(in_tensor, [batch_size, -1])
+    flatten_label_tensor = tf.reshape(label_tensor, [batch_size, -1])
+    
+    cost = tf.reduce_mean(tf.abs(flatten_in_tensor - flatten_label_tensor), axis = 1)
+    
+    return cost
+
+def pixel_L2_cost(in_tensor, label_tensor):
+    H = in_tensor.get_shape().as_list()[1]
+    W = in_tensor.get_shape().as_list()[2]
+    assert H == label_tensor.get_shape().as_list()[1] & W == label_tensor.get_shape().as_list()[2]
+    
+    batch_size = in_tensor.get_shape().as_list()[0]
+    flatten_in_tensor = tf.reshape(in_tensor, [batch_size, -1])
+    flatten_label_tensor = tf.reshape(label_tensor, [batch_size, -1])
+    
+    cost = tf.reduce_mean(tf.square(flatten_in_tensor - flatten_label_tensor), axis = 1)
+    
+    return cost
+
 
 #the test code
 if __name__ == '__main__':
@@ -107,7 +134,7 @@ if __name__ == '__main__':
     
     test_out = tf.ones((1,512,512,1))
     test_label = tf.ones((1,512,512,1))
-    cost = pixel_softmax_cost_func(test_out, test_label)
+    cost = pixel_L1_cost(test_out, test_label)
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
     
